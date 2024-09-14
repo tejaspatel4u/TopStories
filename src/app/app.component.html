@@ -5,16 +5,48 @@
 <div class="container-fluid text-center pb-4">
   <div style="text-align:center">
     <h1>
-      Welcome to {{title}}!
+      {{title}}
     </h1>
   </div>
 </div>
 <div class="text-center">
   <span class="col-sm-4">Enter API Key</span>
-  <input type="text" name="APIKey" id="txtAPIKey" class="col-sm-4" [(ngModel)]="APIKey">
+  <input type="text" name="name" id="name" class="col-sm-4" [(ngModel)]="APIKey" required #name="ngModel">
+</div>
+<div [hidden]="name.valid || name.pristine"
+     class="alert alert-danger">
+  Please enter API Key
 </div>
 <br>
 <div class="col-sm-12 text-center">
-  <input type="button" title="Get Stories" value="Get Stories" class="btn btn-primary" (click)="getStories()"/>
+  <input type="button" title="Get Stories" value="Get Stories" class="btn btn-primary" (click)="getStories()" [disabled]="APIKey == ''" />
 </div>
+<ng-container *ngIf="stories">
+  <div class="container mt-5">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">Item Type</th>
+          <th scope="col">Title</th>
+          <th scope="col">Section</th>
+          <th scope="col">Sub Section</th>
+          <th scope="col">Publish Date</th>
+          <th scope="col">Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let result of stories.body.results">
+          <tr>
+            <td>{{ result.item_type }}</td>
+            <td>{{ result.title }}</td>
+            <td>{{ result.section }}</td>
+            <td>{{ result.subsection }}</td>
+            <td>{{ result.published_date }}</td>
+            <td><img [src]="getImage(result.multimedia)" height="50" width="50"></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
 <router-outlet></router-outlet>
